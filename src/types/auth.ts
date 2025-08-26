@@ -35,8 +35,8 @@ export interface User {
 }
 
 export interface PageResponse<T> {
-    currentPages: number;
-    pageSizes: number;
+    currentPage: number;
+    pageSize: number;
     totalPages: number;
     totalElements: number;
     data: T[];
@@ -107,4 +107,28 @@ export interface AuthState {
     authorities: string[];
     isLoading: boolean;
     error: string | null;
+}
+
+// User search types
+export interface ParticipantResponse {
+    userId: string;
+    username: string;
+    avatar: string | null;
+}
+
+// Conversation creation types
+export interface ConversationCreationRequest {
+    conversationType: 'PRIVATE' | 'GROUP';
+    conversationName?: string;
+    conversationAvatar?: string;
+    participantIds: string[];
+    messageRequest?: ChatMessageRequest;
+}
+
+export interface ConversationCreationResponse {
+    id: string;
+    conversationType: 'PRIVATE' | 'GROUP';
+    name?: string;
+    participants: ConversationParticipant[];
+    createdAt: string;
 }

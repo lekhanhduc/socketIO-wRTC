@@ -1,4 +1,4 @@
-import { ConversationDetailResponse, PageResponse, ChatMessageResponse, ChatMessageRequest, SignInRequest, SignInResponse } from "@/types/auth";
+import { ConversationDetailResponse, PageResponse, ChatMessageResponse, ChatMessageRequest, SignInRequest, SignInResponse, ParticipantResponse, ConversationCreationRequest, ConversationCreationResponse } from "@/types/auth";
 
 const API_BASE = 'http://localhost:9191';
 
@@ -90,7 +90,51 @@ export const chatApi = {
 
         return response.json();
     },
+
+    async createConversation(request: ConversationCreationRequest): Promise<ConversationCreationResponse> {
+        const response = await fetch(`${API_BASE}/chat/api/v1/conversations`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+            body: JSON.stringify(request),
+        });
+
+        if (!response.ok) {
+            throw new Error(`API Error: ${response.status}`);
+        }
+
+        const result: ApiResponse<ConversationCreationResponse> = await response.json();
+        return result.data;
+    },
 };
+
+// Profile/User search API
+export const profileApi = {
+    async searchUsers(page = 1, pageSize = 15, keyword = ''): Promise<PageResponse<ParticipantResponse>> {
+        const params = new URLSearchParams({
+            page: page.toString(),
+            pageSize: pageSize.toString(),
+            keywork: keyword
+        });
+
+        const response = await fetch(`${API_BASE}/profile/api/v1/search?${params}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`API Error: ${response.status}`);
+        }
+
+        const result: ApiResponse<PageResponse<ParticipantResponse>> = await response.json();
+        return result.data;
+    },
+};
+
+
 
 export const authApi = {
     async login(credentials: SignInRequest): Promise<SignInResponse> {
