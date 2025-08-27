@@ -42,6 +42,7 @@ export default function Chat() {
     const webRTCHook = useWebRTC({
         socket,
         onCallReceived: (callData) => {
+
             if (!selectedConversation && callData.fromUserId && conversations.length > 0) {
                 const callerConversation = conversations.find(conv =>
                     conv.participants.some(p => p.userId === callData.fromUserId)
@@ -60,8 +61,9 @@ export default function Chat() {
             setIsCallModalOpen(false);
             setIncomingCall(null);
         },
-        onStreamReceived: (stream) => {
-            console.log('Remote stream received in Chat component');
+
+        onStreamReceived: () => {
+            console.log('📹 Remote stream received in Chat component');
         }
     });
 
@@ -90,6 +92,7 @@ export default function Chat() {
     };
 
     const handleAudioCall = () => {
+        console.log('📞 Initiating audio call...');
         setCallType('audio');
         setIsOutgoingCall(true);
         setIncomingCall(null);
@@ -97,6 +100,7 @@ export default function Chat() {
     };
 
     const handleVideoCall = () => {
+        console.log('📹 Initiating video call...');
         setCallType('video');
         setIsOutgoingCall(true);
         setIncomingCall(null);

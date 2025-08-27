@@ -114,7 +114,8 @@ export const useChat = () => {
 
     useEffect(() => {
         if (socket && isConnected && currentUserId) {
-            socket.emit('call.join_room', currentUserId);
+            const userCallRoom = `user_calls_${currentUserId}`;
+            socket.emit('join_conversation', userCallRoom);
         }
     }, [socket, isConnected, currentUserId]);
 

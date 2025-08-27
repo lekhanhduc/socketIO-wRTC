@@ -43,8 +43,31 @@ export default function ChatArea({
     parseDateTime,
 }: ChatAreaProps) {
     const messagesEndRef = useRef<HTMLDivElement>(null!);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const previousMessagesLength = useRef<number>(0);
 
-    // Removed auto-scroll logic - let user control their scroll position
+    useEffect(() => {
+        const container = scrollContainerRef.current;
+        if (!container) return;
+
+        const newMessagesAdded = messages.length > previousMessagesLength.current && !loadingMoreMessages;
+
+        if (newMessagesAdded) {
+            const { scrollTop, scrollHeight, clientHeight } = container;
+            const isNearBottom = scrollTop + clientHeight >= scrollHeight - 100;
+
+            if (isNearBottom) {
+                console.log('✅ Auto-scrolling to bottom - user is near bottom and new message added');
+                setTimeout(() => {
+                    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+                }, 50);
+            } else {
+                console.log('📌 Not auto-scrolling - user is reading older messages');
+            }
+        }
+
+        previousMessagesLength.current = messages.length;
+    }, [messages, loadingMoreMessages]);
 
     if (!selectedConversation && !pendingChatUser) {
         return <EmptyChatState />;
@@ -71,6 +94,7 @@ export default function ChatArea({
                 onLoadMore={onLoadMore}
                 parseDateTime={parseDateTime}
                 messagesEndRef={messagesEndRef}
+                scrollContainerRef={scrollContainerRef}
             />
 
             <MessageInput

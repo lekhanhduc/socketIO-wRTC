@@ -15,6 +15,7 @@ interface MessageListProps {
     onLoadMore: () => void;
     parseDateTime: (dateTimeString: string) => Date;
     messagesEndRef: RefObject<HTMLDivElement>;
+    scrollContainerRef: RefObject<HTMLDivElement | null>;
 }
 
 export default function MessageList({
@@ -28,8 +29,8 @@ export default function MessageList({
     onLoadMore,
     parseDateTime,
     messagesEndRef,
+    scrollContainerRef,
 }: MessageListProps) {
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
     const previousScrollHeight = useRef<number>(0);
     const isInitialLoad = useRef<boolean>(true);
     const hasScrolledDown = useRef<boolean>(false);
