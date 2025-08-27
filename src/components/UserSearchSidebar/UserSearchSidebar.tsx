@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { ParticipantResponse } from '@/types/auth';
 import { useUserContext } from '@/components/providers/AppWrapper';
 import { useUserSearch } from '@/hooks/useUserSearch';
+import { useDebounce } from '@/hooks/useDebounce';
 
 interface UserSearchSidebarProps {
     onBackToChat: () => void;
@@ -14,46 +15,44 @@ export default function UserSearchSidebar({
     onBackToChat,
     onUserSelected
 }: UserSearchSidebarProps) {
-    const { userId } = useUserContext();
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState<ParticipantResponse[]>([]);
     const inputRef = useRef<HTMLInputElement>(null);
 
     const { searchUsers, isLoading, error, clearError } = useUserSearch();
 
-    // Effect to trigger search when searchTerm changes
-    useEffect(() => {
-        if (!searchTerm.trim()) {
-            setSearchResults([]);
-            return;
-        }
+    const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
-        const timeoutId = setTimeout(async () => {
+    useEffect(() => {
+        const performSearch = async () => {
+            if (!debouncedSearchTerm.trim()) {
+                setSearchResults([]);
+                return;
+            }
+
             try {
-                const results = await searchUsers(searchTerm);
+                const results = await searchUsers(debouncedSearchTerm);
                 setSearchResults(results);
             } catch (err) {
+                console.error('Search error:', err);
                 setSearchResults([]);
             }
-        }, 500);
+        };
 
-        return () => clearTimeout(timeoutId);
-    }, [searchTerm, searchUsers]);
+        performSearch();
+    }, [debouncedSearchTerm, searchUsers]);
 
     useEffect(() => {
-        setSearchTerm('');
-        setSearchResults([]);
-        clearError();
-
-        setTimeout(() => {
+        const timer = setTimeout(() => {
             inputRef.current?.focus();
         }, 100);
-    }, [clearError]);
 
-    const handleUserSelect = (selectedUser: ParticipantResponse) => {
+        return () => clearTimeout(timer);
+    }, []);
+
+    const handleUserSelect = useCallback((selectedUser: ParticipantResponse) => {
         onUserSelected?.(selectedUser.userId, selectedUser.username);
-        onBackToChat();
-    };
+    }, [onUserSelected]);
 
     return (
         <div className="w-80 bg-white border-r border-emerald-200 flex flex-col h-full shadow-lg">
@@ -143,8 +142,11 @@ export default function UserSearchSidebar({
                             {searchResults.map((user) => (
                                 <div
                                     key={user.userId}
-                                    onClick={() => handleUserSelect(user)}
-                                    className="p-4 hover:bg-emerald-50 cursor-pointer transition-colors border-l-4 border-transparent hover:border-emerald-500"
+                                    onClick={() => !isLoading && handleUserSelect(user)}
+                                    className={`p-4 transition-colors border-l-4 border-transparent ${isLoading
+                                        ? 'cursor-not-allowed opacity-50'
+                                        : 'hover:bg-emerald-50 cursor-pointer hover:border-emerald-500'
+                                        }`}
                                 >
                                     <div className="flex items-center space-x-3">
                                         <div className="relative">

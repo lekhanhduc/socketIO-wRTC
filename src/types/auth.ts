@@ -51,9 +51,11 @@ export interface ConversationParticipant {
 export interface ConversationDetailResponse {
     id: string;
     conversationType: 'PRIVATE' | 'GROUP';
+    conversationName?: string;
+    conversationAvatar?: string;
     participants: ConversationParticipant[];
-    lastMessageContent: string;
-    lastMessageTime: string;
+    lastMessageContent: string | null;
+    lastMessageTime: string | null;
 }
 
 export interface ChatMessageResponse {
@@ -122,13 +124,22 @@ export interface ConversationCreationRequest {
     conversationName?: string;
     conversationAvatar?: string;
     participantIds: string[];
-    messageRequest?: ChatMessageRequest;
+    // Removed messageRequest as it's not in backend
+}
+
+// Backend ParticipantInfo structure
+export interface ParticipantInfo {
+    userId: string;
+    username: string;
+    avatar: string | null;
 }
 
 export interface ConversationCreationResponse {
     id: string;
     conversationType: 'PRIVATE' | 'GROUP';
-    name?: string;
-    participants: ConversationParticipant[];
+    participantHash: string;
+    conversationAvatar?: string;
+    conversationName?: string;
+    participantInfo: ParticipantInfo[]; // Changed from ConversationParticipant[] to ParticipantInfo[]
     createdAt: string;
 }

@@ -1,4 +1,4 @@
-import { ConversationDetailResponse, PageResponse, ChatMessageResponse, ChatMessageRequest, SignInRequest, SignInResponse, ParticipantResponse, ConversationCreationRequest, ConversationCreationResponse } from "@/types/auth";
+import { ConversationDetailResponse, PageResponse, ChatMessageResponse, ChatMessageRequest, SignInRequest, SignInResponse, ParticipantResponse, ConversationCreationRequest, ConversationCreationResponse, ParticipantInfo } from "@/types/auth";
 
 const API_BASE = 'http://localhost:9191';
 
@@ -60,7 +60,7 @@ export const chatApi = {
         return response.json();
     },
 
-    async getMessages(conversationId: string, page = 1, size = 20): Promise<ApiResponse<PageResponse<ChatMessageResponse>>> {
+    async getMessages(conversationId: string, page = 1, size = 10): Promise<ApiResponse<PageResponse<ChatMessageResponse>>> {
         const response = await fetch(`${API_BASE}/chat/api/v1/messages/${conversationId}?page=${page}&size=${size}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -107,6 +107,49 @@ export const chatApi = {
 
         const result: ApiResponse<ConversationCreationResponse> = await response.json();
         return result.data;
+    },
+
+    async deleteConversation(conversationId: string): Promise<void> {
+        const response = await fetch(`${API_BASE}/chat/api/v1/conversations/${conversationId}`, {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`API Error: ${response.status}`);
+        }
+    },
+
+    // Utility function to convert ConversationCreationResponse to ConversationDetailResponse
+    convertToConversationDetail: (creationResponse: ConversationCreationResponse, currentUserId: string): ConversationDetailResponse => {
+        if (!creationResponse) {
+            throw new Error('Cannot convert undefined creation response');
+        }
+
+        if (!creationResponse.id) {
+            throw new Error('Creation response missing required id field');
+        }
+
+        // Convert ParticipantInfo[] to ConversationParticipant[] and filter out current user
+        const participants = (creationResponse.participantInfo || []).filter(
+            p => p.userId !== currentUserId
+        ).map(p => ({
+            userId: p.userId,
+            username: p.username,
+            avatar: p.avatar
+        }));
+
+        return {
+            id: creationResponse.id,
+            conversationType: creationResponse.conversationType,
+            conversationName: creationResponse.conversationName,
+            conversationAvatar: creationResponse.conversationAvatar,
+            participants: participants,
+            lastMessageContent: null, // New conversation has no messages
+            lastMessageTime: creationResponse.createdAt,
+        };
     },
 };
 
