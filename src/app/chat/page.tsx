@@ -4,8 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useChat } from '@/hooks/useChat';
 import { useWebRTC } from '@/hooks/useWebRTC';
 import { useUserContext } from '@/components/providers/AppWrapper';
-import { ChatMessageRequest } from '@/types/auth';
-import Header from '@/components/Header';
+import { ChatMessageRequest, MessageMedia } from '@/types/auth';
 import VideoCallModal from '@/components/VideoCallModal';
 import UserSearchSidebar from '@/components/UserSearchSidebar/UserSearchSidebar';
 import ConversationList from '@/components/chat/ConversationList';
@@ -107,8 +106,8 @@ export default function Chat() {
         setIsCallModalOpen(true);
     };
 
-    const sendMessage = async () => {
-        if (!newMessage.trim()) return;
+    const sendMessage = async (attachments?: MessageMedia[]) => {
+        if (!newMessage.trim() && (!attachments || attachments.length === 0)) return;
 
         const messageText = newMessage;
         setNewMessage('');
@@ -116,11 +115,21 @@ export default function Chat() {
         try {
             if (selectedConversation) {
                 // Send message to existing conversation
+                let messageType: 'TEXT' | 'FILE' = 'TEXT';
+
+                // According to backend: if has files or images, type = FILE
+                if (attachments && attachments.length > 0) {
+                    messageType = 'FILE';
+                }
+
                 const messageData: ChatMessageRequest = {
                     conversationId: selectedConversation.id,
                     message: messageText,
-                    messageType: 'TEXT',
+                    messageType: messageType,
+                    messageMedia: attachments,
                 };
+
+                console.log('🚀 Sending message with type:', messageType, 'attachments:', attachments?.length || 0);
                 await sendChatMessage(messageData);
             } else if (pendingChatUser) {
                 // Fallback: create conversation with first message (legacy support)
@@ -129,11 +138,21 @@ export default function Chat() {
                     setPendingChatUser(null);
 
                     // Send message to the newly created conversation
+                    let messageType: 'TEXT' | 'FILE' = 'TEXT';
+
+                    // According to backend: if has files or images, type = FILE
+                    if (attachments && attachments.length > 0) {
+                        messageType = 'FILE';
+                    }
+
                     const messageData: ChatMessageRequest = {
                         conversationId: newConversation.id,
                         message: messageText,
-                        messageType: 'TEXT',
+                        messageType: messageType,
+                        messageMedia: attachments,
                     };
+
+                    console.log('🚀 Sending message to new conversation with type:', messageType, 'attachments:', attachments?.length || 0);
                     await sendChatMessage(messageData);
                 } catch (error) {
                     console.error('Failed to create conversation for pending user:', error);
@@ -187,10 +206,8 @@ export default function Chat() {
         }), [conversations, searchTerm, getConversationName]);
 
     return (
-        <div className="h-screen flex flex-col bg-gradient-to-br from-slate-50 to-emerald-50">
-            <Header title="RoomChat - Tìm trọ & Tìm người ở ghép" />
-
-            <div className="flex-1 flex overflow-hidden">
+        <div className="h-screen flex flex-col bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100">
+            <div className="flex-1 flex overflow-hidden bg-white bg-opacity-80 backdrop-blur-sm">
                 {isSearchMode ? (
                     <UserSearchSidebar
                         onBackToChat={() => {

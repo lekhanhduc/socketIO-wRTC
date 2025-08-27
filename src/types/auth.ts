@@ -58,6 +58,35 @@ export interface ConversationDetailResponse {
     lastMessageTime: string | null;
 }
 
+export interface FileMetaDataResponse {
+    name: string;
+    contentType: string;
+    size: number;
+    url: string;
+    displayOrder?: number;
+}
+
+export interface MessageMedia {
+    id?: string;
+    mediaUrl: string;
+    mediaName?: string;
+    mediaSize?: number;
+    mimeType?: string;
+    displayOrder?: number;
+    uploadedAt?: string;
+}
+
+export interface MediaAttachment {
+    fileId?: string;
+    fileName: string;
+    fileSize: number;
+    fileType: string;
+    url: string;
+    thumbnailUrl?: string;
+}
+
+export type MessageType = 'TEXT' | 'IMAGE' | 'VIDEO' | 'AUDIO' | 'FILE' | 'STICKER';
+
 export interface ChatMessageResponse {
     id?: string;
     tempId?: string;
@@ -67,9 +96,9 @@ export interface ChatMessageResponse {
     message: string;
     status: 'SENDING' | 'SENT' | 'DELIVERED' | 'READ';
     isRead: boolean;
-    messageType: 'TEXT' | 'IMAGE' | 'FILE' | 'AUDIO' | 'VIDEO' | 'DOCUMENT' | 'STICKER';
+    messageType: MessageType;
     createdAt: string;
-    messageMedia?: any[];
+    messageMedia?: MessageMedia[]; // Matches backend ChatMessageResponse
     participants?: string[];
 }
 
@@ -81,7 +110,10 @@ export const isOwnMessage = (message: ChatMessageResponse, currentUserId: string
 export interface ChatMessageRequest {
     conversationId: string;
     message: string;
-    messageType: 'TEXT' | 'IMAGE' | 'FILE' | 'AUDIO' | 'VIDEO' | 'DOCUMENT' | 'STICKER';
+    messageType: MessageType;
+    messageMedia?: MessageMedia[];
+    tempId?: string;
+    senderId?: string;
 }
 
 export interface SocketEvents {

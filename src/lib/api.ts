@@ -1,4 +1,4 @@
-import { ConversationDetailResponse, PageResponse, ChatMessageResponse, ChatMessageRequest, SignInRequest, SignInResponse, ParticipantResponse, ConversationCreationRequest, ConversationCreationResponse, ParticipantInfo } from "@/types/auth";
+import { ConversationDetailResponse, PageResponse, ChatMessageResponse, ChatMessageRequest, SignInRequest, SignInResponse, ParticipantResponse, ConversationCreationRequest, ConversationCreationResponse, ParticipantInfo, FileMetaDataResponse } from "@/types/auth";
 
 const API_BASE = 'http://localhost:9191';
 
@@ -86,6 +86,65 @@ export const chatApi = {
 
         if (!response.ok) {
             throw new Error(`API Error: ${response.status}`);
+        }
+
+        return response.json();
+    },
+
+    async uploadFile(file: File): Promise<ApiResponse<{ url: string; fileId: string; fileName: string; fileSize: number; fileType: string }>> {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await fetch(`${API_BASE}/chat/api/v1/files/upload`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+            body: formData,
+        });
+
+        if (!response.ok) {
+            throw new Error(`File upload failed: ${response.status}`);
+        }
+
+        return response.json();
+    },
+
+    async uploadImage(file: File): Promise<ApiResponse<{ url: string; fileId: string; fileName: string; fileSize: number; fileType: string }>> {
+        const formData = new FormData();
+        formData.append('image', file);
+
+        const response = await fetch(`${API_BASE}/chat/api/v1/images/upload`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+            body: formData,
+        });
+
+        if (!response.ok) {
+            throw new Error(`Image upload failed: ${response.status}`);
+        }
+
+        return response.json();
+    },
+
+    async uploadMediaFiles(files: File[]): Promise<ApiResponse<FileMetaDataResponse[]>> {
+        const formData = new FormData();
+        files.forEach((file) => {
+            formData.append('files', file);
+        });
+
+        const response = await fetch(`${API_BASE}/file/upload-media-async`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
+            body: formData,
+        });
+
+        if (!response.ok) {
+            throw new Error(`Media upload failed: ${response.status}`);
         }
 
         return response.json();

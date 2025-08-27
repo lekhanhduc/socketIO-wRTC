@@ -39,7 +39,7 @@ export default function ConversationList({
     parseDateTime,
 }: ConversationListProps) {
     return (
-        <div className="w-80 bg-white border-r border-emerald-200 flex flex-col shadow-lg">
+        <div className="w-80 bg-white border-r border-emerald-100 flex flex-col shadow-sm">
             <ConversationListHeader
                 searchTerm={searchTerm}
                 onSearchChange={onSearchChange}

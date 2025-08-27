@@ -160,6 +160,12 @@ export const useChat = () => {
         }
 
         try {
+            console.log('📤 Sending via socket:', {
+                messageType: messageData.messageType,
+                hasMedia: !!messageData.messageMedia && messageData.messageMedia.length > 0,
+                mediaCount: messageData.messageMedia?.length || 0,
+                message: messageData.message
+            });
             socket.emit('chat.send', messageData);
         } catch (err) {
             console.error('Failed to send message via socket', err);

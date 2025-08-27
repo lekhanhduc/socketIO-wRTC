@@ -40,7 +40,7 @@ export default function ConversationItem({
 
     return (
         <div
-            className={`group relative p-3 hover:bg-gray-50 transition-colors cursor-pointer ${isSelected ? 'bg-blue-50' : ''
+            className={`group relative p-4 hover:bg-emerald-50 transition-all duration-200 cursor-pointer border-l-4 border-transparent hover:border-emerald-200 ${isSelected ? 'bg-emerald-100 border-emerald-500' : ''
                 }`}
         >
             <div
@@ -48,12 +48,12 @@ export default function ConversationItem({
                 className="flex items-center justify-between"
             >
                 <div className="flex items-center space-x-3 flex-1 min-w-0">
-                    <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-semibold text-lg shadow-sm">
+                    <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-sm">
                         {getConversationName(conversation).charAt(0).toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
-                            <div className="font-medium text-gray-900 truncate text-sm">
+                            <div className="font-semibold text-gray-900 truncate text-sm">
                                 {getConversationName(conversation)}
                             </div>
                             {conversation.lastMessageTime && (
@@ -65,17 +65,16 @@ export default function ConversationItem({
                                 </div>
                             )}
                         </div>
-                        <div className="text-sm text-gray-500 truncate mt-1">
+                        <div className="text-sm text-gray-600 truncate mt-0.5">
                             {conversation.lastMessageContent || 'Chưa có tin nhắn'}
                         </div>
                     </div>
                 </div>
 
-                {/* Three Dots Menu */}
                 <div className="ml-2">
                     <button
                         onClick={handleDropdownToggle}
-                        className="opacity-0 group-hover:opacity-100 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all duration-200"
+                        className="opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-emerald-600 hover:bg-emerald-100 rounded-full transition-all duration-200"
                         title="Tùy chọn"
                     >
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -83,7 +82,6 @@ export default function ConversationItem({
                         </svg>
                     </button>
 
-                    {/* Dropdown Menu */}
                     {isDropdownOpen && (
                         <div className="dropdown-menu absolute right-0 top-20 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
                             <button

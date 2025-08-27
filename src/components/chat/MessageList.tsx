@@ -102,7 +102,7 @@ export default function MessageList({
 
     if (showEmptyState) {
         return (
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-emerald-50/30 to-white">
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-blue-50/30 to-gray-50/50">
                 <div className="flex items-center justify-center h-full">
                     <div className="text-center text-gray-500">
                         <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -118,7 +118,7 @@ export default function MessageList({
                                     : 'Chưa có tin nhắn nào'
                             }
                         </p>
-                        <p className="text-xs text-emerald-500 mt-1">
+                        <p className="text-xs text-blue-500 mt-1">
                             Hãy nhập tin nhắn đầu tiên!
                         </p>
                     </div>
@@ -129,7 +129,7 @@ export default function MessageList({
 
     if (selectedConversation && loading) {
         return (
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-emerald-50/30 to-white">
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-blue-50/30 to-gray-50/50">
                 <div className="flex items-center justify-center h-full">
                     <div className="text-center text-gray-500">
                         <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
@@ -148,15 +148,15 @@ export default function MessageList({
     return (
         <div
             ref={scrollContainerRef}
-            className="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-emerald-50/30 to-white"
+            className="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-blue-50/30 to-gray-50/50"
         >
             {loadingMoreMessages && (
                 <div className="flex justify-center py-4">
                     <div className="flex items-center space-x-3 bg-white rounded-full px-4 py-2 shadow-sm border border-gray-100">
                         <div className="flex space-x-1">
-                            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                            <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                            <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                            <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                         </div>
                         <span className="text-sm text-gray-600 font-medium">Đang tải tin nhắn cũ...</span>
                     </div>

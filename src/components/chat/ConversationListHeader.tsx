@@ -23,7 +23,7 @@ export default function ConversationListHeader({
     };
 
     return (
-        <div className="border-b border-emerald-100 bg-gradient-to-r from-emerald-50 to-teal-50">
+        <div className="border-b border-emerald-100 bg-white shadow-sm">
             {/* Search Section */}
             <div className="p-4">
                 <div className="relative">
@@ -33,14 +33,14 @@ export default function ConversationListHeader({
                         value={searchTerm}
                         onChange={(e) => onSearchChange(e.target.value)}
                         onFocus={onSearchModeToggle}
-                        className="w-full pl-10 pr-12 py-3 bg-white border border-emerald-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm shadow-sm"
+                        className="w-full pl-10 pr-12 py-3 bg-white border border-emerald-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm shadow-sm transition-all duration-200"
                     />
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center">
                         <svg className="h-5 w-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </div>
-                    {/* New Chat Button */}
+
                     <button
                         onClick={onSearchModeToggle}
                         className="absolute inset-y-0 right-0 pr-3 flex items-center text-emerald-500 hover:text-emerald-600 transition-colors"
@@ -53,14 +53,13 @@ export default function ConversationListHeader({
                 </div>
             </div>
 
-            {/* Filter Tabs */}
             <div className="px-4 pb-4">
-                <div className="flex border-b border-gray-200">
+                <div className="flex border-b border-emerald-100">
                     <button
                         onClick={() => handleTabClick('all')}
                         className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'all'
                             ? 'border-emerald-500 text-emerald-600'
-                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                            : 'border-transparent text-gray-500 hover:text-emerald-600 hover:border-emerald-300'
                             }`}
                     >
                         Tất cả
@@ -69,7 +68,7 @@ export default function ConversationListHeader({
                         onClick={() => handleTabClick('unread')}
                         className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'unread'
                             ? 'border-emerald-500 text-emerald-600'
-                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                            : 'border-transparent text-gray-500 hover:text-emerald-600 hover:border-emerald-300'
                             }`}
                     >
                         Chưa đọc
@@ -78,7 +77,7 @@ export default function ConversationListHeader({
                         onClick={() => handleTabClick('archived')}
                         className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'archived'
                             ? 'border-emerald-500 text-emerald-600'
-                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                            : 'border-transparent text-gray-500 hover:text-emerald-600 hover:border-emerald-300'
                             }`}
                     >
                         Lưu trữ

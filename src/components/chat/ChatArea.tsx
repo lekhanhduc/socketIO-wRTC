@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useEffect } from 'react';
-import { ConversationDetailResponse, ChatMessageResponse } from '@/types/auth';
+import { ConversationDetailResponse, ChatMessageResponse, MessageMedia } from '@/types/auth';
 import EmptyChatState from './EmptyChatState';
 import ChatHeader from './ChatHeader';
 import MessageList from './MessageList';
@@ -18,7 +18,7 @@ interface ChatAreaProps {
     hasMoreMessages: boolean;
     onLoadMore: () => void;
     onNewMessageChange: (message: string) => void;
-    onSendMessage: () => void;
+    onSendMessage: (attachments?: MessageMedia[]) => void;
     onAudioCall: () => void;
     onVideoCall: () => void;
     getConversationName: (conversation: ConversationDetailResponse) => string;
@@ -74,7 +74,7 @@ export default function ChatArea({
     }
 
     return (
-        <div className="flex-1 flex flex-col bg-white">
+        <div className="flex-1 flex flex-col bg-gradient-to-b from-gray-50 to-white">
             <ChatHeader
                 selectedConversation={selectedConversation}
                 pendingChatUser={pendingChatUser}
